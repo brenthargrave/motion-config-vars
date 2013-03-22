@@ -3,9 +3,9 @@ require "bundler/gem_tasks"
 $:.unshift("/Library/RubyMotion/lib")
 require 'motion/project'
 require 'rubygems'
-require './lib/motion-env-vars'
+require './lib/motion-config-vars'
 
 Motion::Project::App.setup do |app|
-  app.name = 'motion-env-vars'
+  app.name = 'motion-config-vars'
 end
 
