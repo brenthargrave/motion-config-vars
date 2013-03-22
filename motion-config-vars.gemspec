@@ -1,16 +1,14 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'motion/config/vars/version'
+require File.expand_path('../lib/motion-config-vars/version', __FILE__)
 
 Gem::Specification.new do |spec|
   spec.name          = "motion-config-vars"
-  spec.version       = Motion::Config::Vars::VERSION
+  spec.version       = ConfigVars::VERSION
   spec.authors       = ["Brent Hargrave"]
   spec.email         = ["brent@brent.is"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.description   = %q{Heroku-style config vars for RubyMotion}
+  spec.summary       = %q{Heroku-style config vars for RubyMotion}
+  spec.homepage      = "https://github.com/jamescallmebrent/motion-config-vars"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -18,6 +16,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+  spec.add_dependency('motion-yaml', '>= 1.0')
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
 end
