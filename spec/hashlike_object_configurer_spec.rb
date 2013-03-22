@@ -3,15 +3,16 @@ describe HashlikeObjectConfigurer do
   before{ @described_class = HashlikeObjectConfigurer }
 
   before do
+    @hashlike_object = {}
     @valid_config_vars_data = {
       "API_ENV" => {
-        "development" => "lvh.me:3000",
-        "test" => "lvh.me:3001",
-        "production" => "domain.com"
+        "development" =>  { "HOST" => "lvh.me:3000" },
+        "test" =>  { "HOST" => "lvh.me:3001" },
+        "production" =>  { "HOST" => "domain.com" }
       }
     }
     @options = {
-      hashlike_object: {},
+      hashlike_object: @hashlike_object,
       config_vars_data: @valid_config_vars_data,
       config_name_for_facet_named: lambda { |facet_name| "production" }
     }
@@ -55,15 +56,11 @@ describe HashlikeObjectConfigurer do
       message.should.eql "hashlike_object must respond to []="
     end
 
-  end
-
-  describe "#perform!" do
-
     # TODO: below, replace ArgumentError with custom ConfigurationError
     it "raises ArgumentError unless all configured facets are specified" do
       @options[:config_name_for_facet_named] = lambda { |facet_name| {}[facet_name] }
       lambda do
-        @described_class.new(@options).perform!
+        @described_class.new @options
       end.should.raise(ArgumentError).
       message.should.eql "configured facet not specified: API_ENV"
     end
@@ -71,9 +68,23 @@ describe HashlikeObjectConfigurer do
     it "raises ArgumentError if specified configuration of any facet unavailable" do
       @options[:config_vars_data]["API_ENV"].delete "production"
       lambda do
-        @described_class.new(@options).perform!
+        @described_class.new @options
       end.should.raise(ArgumentError).
       message.should.eql "configuration 'production' unavailable for 'API_ENV'"
+    end
+
+  end
+
+  describe "#perform!" do
+
+    before { @described_class.new(@options).perform! }
+
+    it "sets top-level key on hashlike_object" do
+      @hashlike_object["API_ENV"].should.eql "production"
+    end
+
+    it "sets configuration key/value pairs" do
+      @hashlike_object["HOST"].should.eql "domain.com"
     end
 
   end

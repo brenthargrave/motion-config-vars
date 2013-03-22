@@ -11,14 +11,24 @@ class HashlikeObjectConfigurer
     raise ArgumentError, "'config_name_for_facet_named' missing" unless @config_name_for_facet_named
     self.validate_config_name_for_facet_named_is_closure
     self.validate_hashlike_object_is_hashlike
-  end
-
-  def perform!
     self.validate_all_configured_facets_are_requested
     self.validate_all_facets_requested_configurations_available
   end
 
+  def perform!
+    self.requested_facets_names.each do |requested_facet_name|
+      configuration_name = self.config_name_for_facet_named.call requested_facet_name
+      self.set requested_facet_name, configuration_name
+      facet_data = self.config_vars_data[requested_facet_name][configuration_name]
+      facet_data.each {|key, value| self.set key, value }
+    end
+  end
+
 protected
+
+  def set key, value
+    self.hashlike_object[key] = value
+  end
 
   def validate_config_name_for_facet_named_is_closure
     unless self.config_name_for_facet_named.respond_to? :call
