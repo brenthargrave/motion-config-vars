@@ -1,0 +1,7 @@
+API_ENV:
+  development:
+    HOST: product.dev
+  test:
+    HOST: product.test
+  production:
+    HOST: product.com
