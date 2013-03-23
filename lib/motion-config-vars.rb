@@ -39,36 +39,28 @@ before *%w{ config
   unless File.exists? vars_yml_path
     raise "'#{vars_yml_path}' missing. Run 'rake config:vars' to generate it."
   end
-=begin
 
   require 'yaml' # TODO: how to exclude from build?
   require 'motion-yaml'
 
   Motion::Project::App.setup do |app|
+    vars_yaml = File.read vars_yml_path
+    vars_data = YAML.load vars_yaml
 
-    if File.exists? vars_yml_path
+    require File.join(File.dirname(__FILE__), 'motion-config-vars/embed/hashlike_object_configurer')
+    HashlikeObjectConfigurer.new({
+      config_vars_data: vars_data,
+      hashlike_object: app.info_plist,
+      config_name_for_facet_named: lambda { |facet_name| ENV[facet_name] }
+    }).perform!
 
-      vars_yaml = File.read vars_yml_path
-      puts "vars_yaml: #{vars_yaml}"
-      vars_data = YAML.load vars_yaml
-      puts "vars_data: #{vars_data}"
-
-      require File.join(File.dirname(__FILE__), 'motion-config-vars/embed/hashlike_object_configurer')
-      HashlikeObjectConfigurer.new(config_vars_data: vars_data,
-                                   hashlike_object: app.info_plist,
-                                   config_name_for_facet_named: lambda { |facet_name|
-                                     ENV[facet_name]
-                                   }).perform!
-
-      # once app.info_plist successfully configured, insert code necessary to
-      # configure app's ENV as well.
-      Dir.glob(File.join(File.dirname(__FILE__), 'motion-config-vars/embed/*.rb')).each do |file|
-        app.files.unshift file
-      end
-
+    # once app.info_plist successfully configured, insert code necessary to
+    # configure app's ENV as well.
+    Dir.glob(File.join(File.dirname(__FILE__), 'motion-config-vars/embed/*.rb')).each do |file|
+      app.files.unshift file
     end
 
   end
-=end
+
 end
 
