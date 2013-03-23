@@ -1,7 +1,5 @@
 class HashlikeObjectConfigurer
 
-  attr_reader :hashlike_object, :config_vars_data, :config_name_for_facet_named
-
   def initialize options={}
     @hashlike_object = options[:hashlike_object]
     raise ArgumentError, "'hashlike_object' missing" unless @hashlike_object
@@ -17,9 +15,9 @@ class HashlikeObjectConfigurer
 
   def perform!
     self.requested_facets_names.each do |requested_facet_name|
-      configuration_name = self.config_name_for_facet_named.call requested_facet_name
+      configuration_name = @config_name_for_facet_named.call requested_facet_name
       self.set requested_facet_name, configuration_name
-      facet_data = self.config_vars_data[requested_facet_name][configuration_name]
+      facet_data = @config_vars_data[requested_facet_name][configuration_name]
       facet_data.each {|key, value| self.set key, value }
     end
   end
@@ -27,17 +25,21 @@ class HashlikeObjectConfigurer
 protected
 
   def set key, value
-    self.hashlike_object[key] = value
+    # TODO: ensure pre-existing values aren't clobbered
+    #if self.hahs!ENV[key].nil?
+      #raise StandardError, "ENV[#{key}] already exists, is set to #{value}"
+    #end
+    @hashlike_object[key] = value
   end
 
   def validate_config_name_for_facet_named_is_closure
-    unless self.config_name_for_facet_named.respond_to? :call
+    unless @config_name_for_facet_named.respond_to? :call
       raise ArgumentError, "'config_name_for_facet_named' must be a closure"
     end
   end
 
   def validate_hashlike_object_is_hashlike
-    unless self.hashlike_object.respond_to?(:[]=)
+    unless @hashlike_object.respond_to?(:[]=)
       raise ArgumentError, "hashlike_object must respond to []="
     end
   end
@@ -56,7 +58,7 @@ protected
   end
 
   def configured_facets_names
-    self.config_vars_data.keys
+    @config_vars_data.keys
   end
 
   def unrequested_configured_facets_names
@@ -65,14 +67,14 @@ protected
 
   def requested_facets_names
     self.configured_facets_names.map do |facet_name|
-      facet_name if self.config_name_for_facet_named.call(facet_name)
+      facet_name if @config_name_for_facet_named.call(facet_name)
     end
   end
 
   def validate_all_facets_requested_configurations_available
     self.requested_facets_names.each do |requested_facet_name|
-      configuration_name = self.config_name_for_facet_named.call requested_facet_name
-      facet_data = self.config_vars_data[requested_facet_name][configuration_name]
+      configuration_name = @config_name_for_facet_named.call requested_facet_name
+      facet_data = @config_vars_data[requested_facet_name][configuration_name]
       if facet_data.nil?
         raise ArgumentError, "configuration '#{configuration_name}' unavailable for '#{requested_facet_name}'"
       end
