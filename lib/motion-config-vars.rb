@@ -21,7 +21,9 @@ namespace "config:vars" do
     end
     # append filepath to project's .gitignore
     if File.exists? '.gitignore'
-      File.open('.gitignore', "w") { |file| file.puts "\n#{vars_yml_filename}" }
+      File.open('.gitignore', "a") do |file|
+        file.puts "\n# Ignore motion-config-vars config file\n#{vars_yml_path}"
+      end
     end
   end
 end
@@ -35,7 +37,7 @@ before *%w{ config
             archive archive:distribution } do
 
   unless File.exists? vars_yml_path
-    puts "WARNING: '#{vars_yml_path}' missing. Run 'rake config:vars' to generate it."
+    puts "WARNING: '#{vars_yml_path}' missing. Run 'rake config:vars:init' to generate one."
   else
 
     require 'yaml' # TODO: how to exclude from build?
