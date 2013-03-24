@@ -45,7 +45,7 @@ protected
   def validate_all_configured_facets_are_requested
     unless self.all_configured_facets_are_requested?
       names = self.unrequested_configured_facets_names.join ", "
-      raise ArgumentError, "configured facet not specified: #{names}"
+      raise ConfigurationError, "configured facet not specified: #{names}"
     end
   end
 
@@ -75,7 +75,7 @@ protected
       facet_data = @config_vars_data[requested_facet_name]
       unless (facet_data.is_a?(Hash) && facet_data[configuration_name]) or
              (facet_data.is_a?(Array) && facet_data.include?(configuration_name))
-        raise ArgumentError, "configuration '#{configuration_name}' unavailable for '#{requested_facet_name}'"
+        raise ConfigurationError, "configuration '#{configuration_name}' unavailable for '#{requested_facet_name}'"
       end
     end
   end

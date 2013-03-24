@@ -42,20 +42,19 @@ describe HashlikeObjectConfigurer do
         message.should.eql "hashlike_object must respond to []="
       end
 
-      # TODO: below, replace ArgumentError with custom ConfigurationError
-      it "raises ArgumentError unless all configured facets are specified" do
+      it "raises ConfigurationError unless all configured facets are specified" do
         @options[:config_name_for_facet_named] = lambda { |facet_name| {}[facet_name] }
         lambda do
           @described_class.new @options
-        end.should.raise(ArgumentError).
+        end.should.raise(ConfigurationError).
         message.should.eql "configured facet not specified: API_ENV"
       end
 
-      it "raises ArgumentError if specified configuration of any facet unavailable" do
+      it "raises ConfigurationError if specified configuration of any facet unavailable" do
         @options[:config_vars_data]["API_ENV"].delete "production"
         lambda do
           @described_class.new @options
-        end.should.raise(ArgumentError).
+        end.should.raise(ConfigurationError).
         message.should.eql "configuration 'production' unavailable for 'API_ENV'"
       end
 
