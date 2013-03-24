@@ -17,8 +17,10 @@ class HashlikeObjectConfigurer
     self.requested_facets_names.each do |requested_facet_name|
       configuration_name = @config_name_for_facet_named.call requested_facet_name
       self.set requested_facet_name, configuration_name
-      facet_data = @config_vars_data[requested_facet_name][configuration_name]
-      facet_data.each {|key, value| self.set key, value }
+      facet_data = @config_vars_data[requested_facet_name]
+      return unless facet_data.is_a? Hash
+      configuration_data = facet_data[configuration_name]
+      configuration_data.each { |key, value| self.set key, value }
     end
   end
 
@@ -74,8 +76,9 @@ protected
   def validate_all_facets_requested_configurations_available
     self.requested_facets_names.each do |requested_facet_name|
       configuration_name = @config_name_for_facet_named.call requested_facet_name
-      facet_data = @config_vars_data[requested_facet_name][configuration_name]
-      if facet_data.nil?
+      facet_data = @config_vars_data[requested_facet_name]
+      unless (facet_data.is_a?(Hash) && facet_data[configuration_name]) or
+             (facet_data.is_a?(Array) && facet_data.include?(configuration_name))
         raise ArgumentError, "configuration '#{configuration_name}' unavailable for '#{requested_facet_name}'"
       end
     end
