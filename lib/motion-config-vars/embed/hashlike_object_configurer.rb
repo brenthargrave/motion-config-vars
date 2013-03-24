@@ -27,11 +27,7 @@ class HashlikeObjectConfigurer
 protected
 
   def set key, value
-    # TODO: ensure pre-existing values aren't clobbered
-    #if self.hahs!ENV[key].nil?
-      #raise StandardError, "ENV[#{key}] already exists, is set to #{value}"
-    #end
-    @hashlike_object[key] = value
+    @hashlike_object[key] ||= value
   end
 
   def validate_config_name_for_facet_named_is_closure

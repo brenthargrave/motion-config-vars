@@ -27,6 +27,10 @@ ENV["API_ENV"] #=> development
 ENV["HOST"] #=> lvh.me:3000
 ```
 
+If touching ENV makes you squirm, not to worry. Existing settings aren't
+overwritten and an alternative constant, RMENV, is available that behaves the
+same way.
+
 You might ask why not make "development", "production", etc. the top-level
 keys? Why bother requiring an API_ENV? In my experience configuring environements
 for API-backed clients is more complex because their configs depend on both the
