@@ -11,6 +11,6 @@ if path = NSBundle.mainBundle.pathForResource("app", ofType:"yml")
   }).perform!
 
 else
-  puts "WARNING: main bundle missing app.yml"
+  puts "WARNING! main bundle missing app.yml"
 end
 
