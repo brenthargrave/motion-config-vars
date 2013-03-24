@@ -72,6 +72,16 @@ I have a slew of similar aliases (terser and refactored, of course) that
 capture all required permutations of build type and API environment.
 
 
+## Tests
+
+To run the tests, run
+```bash
+touch Rakefile; bundle exec rake spec BUILD_ENV=test
+```
+(The gem only embeds its code in the app if a config file is present, so its
+necessary to include a test app.yml to ensure the specs have code to exercise.)
+
+
 ## Contributing
 
 1. Fork it
