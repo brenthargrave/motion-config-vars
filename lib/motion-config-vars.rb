@@ -32,8 +32,6 @@ require 'rake/hooks'
 before *%w{ config
             default
             build build:device build:simulator
-            simulator
-            device
             archive archive:distribution } do
 
   unless File.exists? vars_yml_path
