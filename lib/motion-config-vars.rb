@@ -35,7 +35,7 @@ before *%w{ config
             archive archive:distribution } do
 
   unless File.exists? vars_yml_path
-    puts "'#{vars_yml_path}' missing. Run 'rake config:vars' to generate it."
+    puts "WARNING: '#{vars_yml_path}' missing. Run 'rake config:vars' to generate it."
   else
 
     require 'yaml' # TODO: how to exclude from build?
