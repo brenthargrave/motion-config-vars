@@ -4,7 +4,7 @@ if path = NSBundle.mainBundle.pathForResource("app", ofType:"yml")
 
   RMENV = {} # alternative to ENV for the squimish
   [ENV, RMENV].each do |env|
-    HashlikeObjectConfigurer.new({
+    MotionConfigVars::HashlikeObjectConfigurer.new({
       config_vars_data: vars_data,
       hashlike_object: env,
       config_name_for_facet_named: lambda { |facet_name|

@@ -1,6 +1,6 @@
-describe HashlikeObjectConfigurer do
+describe MotionConfigVars::HashlikeObjectConfigurer do
 
-  before{ @described_class = HashlikeObjectConfigurer }
+  before{ @described_class = MotionConfigVars::HashlikeObjectConfigurer }
 
   shared "a configuration-robust configurer" do
 
@@ -46,7 +46,7 @@ describe HashlikeObjectConfigurer do
         @options[:config_name_for_facet_named] = lambda { |facet_name| {}[facet_name] }
         lambda do
           @described_class.new @options
-        end.should.raise(ConfigurationError).
+        end.should.raise(MotionConfigVars::ConfigurationError).
         message.should.eql "configured facet not specified: API_ENV"
       end
 
@@ -54,7 +54,7 @@ describe HashlikeObjectConfigurer do
         @options[:config_vars_data]["API_ENV"].delete "production"
         lambda do
           @described_class.new @options
-        end.should.raise(ConfigurationError).
+        end.should.raise(MotionConfigVars::ConfigurationError).
         message.should.eql "configuration 'production' unavailable for 'API_ENV'"
       end
 

@@ -48,7 +48,7 @@ before *%w{ config
       vars_data = YAML.load vars_yaml
 
       require File.join(File.dirname(__FILE__), 'motion-config-vars/embed/hashlike_object_configurer')
-      HashlikeObjectConfigurer.new({
+      MotionConfigVars::HashlikeObjectConfigurer.new({
         config_vars_data: vars_data,
         hashlike_object: app.info_plist,
         config_name_for_facet_named: lambda { |facet_name| ENV[facet_name] }

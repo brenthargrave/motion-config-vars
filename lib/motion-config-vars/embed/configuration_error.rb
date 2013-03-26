@@ -1,2 +1,4 @@
-class ConfigurationError < Exception
+module MotionConfigVars
+  class ConfigurationError < Exception
+  end
 end

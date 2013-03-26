@@ -3,7 +3,7 @@ require File.expand_path('../lib/motion-config-vars/version', __FILE__)
 
 Gem::Specification.new do |spec|
   spec.name          = "motion-config-vars"
-  spec.version       = ConfigVars::VERSION
+  spec.version       = MotionConfigVars::VERSION
   spec.authors       = ["Brent Hargrave"]
   spec.email         = ["brent@brent.is"]
   spec.description   = %q{Heroku-style config vars for RubyMotion}
