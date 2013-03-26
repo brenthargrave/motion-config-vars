@@ -31,7 +31,8 @@ end
 
 require 'rake/hooks'
 
-before *%w{ config
+before *%w{ spec
+            config
             default
             build build:device build:simulator
             archive archive:distribution } do
@@ -40,6 +41,11 @@ before *%w{ config
     puts "WARNING: '#{vars_yml_path}' missing. Run 'rake config:vars:init' to generate one."
   else
 
+    # NOTE: RM appears to monitor a project Rakefile's modified-at timestamp,
+    # so we force-update it before every build to ensure the build reflects
+    # the latest passed-in environment variable(s).
+    `touch Rakefile`
+
     require 'yaml' # TODO: how to exclude from build?
     require 'motion-yaml'
 
@@ -47,7 +53,9 @@ before *%w{ config
       vars_yaml = File.read vars_yml_path
       vars_data = YAML.load vars_yaml
 
-      require File.join(File.dirname(__FILE__), 'motion-config-vars/embed/hashlike_object_configurer')
+      %w{ configuration_error hashlike_object_configurer }.each do |filename|
+        require File.join(File.dirname(__FILE__), "motion-config-vars/embed/#{filename}")
+      end
       MotionConfigVars::HashlikeObjectConfigurer.new({
         config_vars_data: vars_data,
         hashlike_object: app.info_plist,

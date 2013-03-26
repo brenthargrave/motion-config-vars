@@ -1,7 +1,7 @@
 # motion-config-vars
 ## Configure RubyMotion's ENV with a YAML file
 
-This gem brings Rails-on-Heroku-inspired environment configuration to Rubymotion
+This gem brings Rails-on-Heroku-style environment configuration to Rubymotion
 development. Fill out a YAML configuration file with top-level keys containing
 mutually-exclusive environments, and nest keys below them with values
 specific to each environment configuration.
@@ -28,7 +28,7 @@ ENV["API_ENV"] #=> development
 ENV["HOST"] #=> lvh.me:3000
 ```
 
-If touching ENV makes you squirm, not to worry. Pre-existing values aren't
+If touching ENV makes you queasy, not to worry. Pre-existing values aren't
 overwritten and an alternative hash-like constant, RMENV, is configured as well.
 
 You might ask why not make "development", "production", etc. the top-level
@@ -73,24 +73,21 @@ Generate the sample YAML config file:
 
 ## Usage, with an IMPORTANT caveat
 
-After generating the "resources/app.yml" and filling it out you're *almost* ready
-to roll. One more detail.
+After generating the "resources/app.yml" and filling it out you're *almost*
+ready to roll. One more detail.
 
-It seems that RM currently monitors changes to your Rakefile, and only
-rebuilds your app from your Rakefile's configuration if the Rakefile itself has
-been touched since the last build.  Using this gem, your configuration values
-may change depending on what config-vars you pass to your rake tasks.
+It seems that RM currently monitors changes to your project's Rakefile, and only
+rebuilds your app from the Rakefile's configuration if the file itself has
+been modified since the last build.  While using this gem, however, your app's
+configuration is *dynamically* updated (specifically, the "app.info_plist"
+configuration variable is edited), which RM won't pick up by default. So, to
+ensure RM rebuilds from the latest, dynamically-defined values in your Rakefile
+it will automatically [touch](http://en.wikipedia.org/wiki/Touch_(Unix)) your
+project's Rakefile before any of RM's default, build-triggering tasks.
 
-To ensure RM rebuilds from configuration every time, you **MUST** re-touch your
-Rakefile before running a build task. If you don't, the built app may not have
-the env vars you *think* it does.  Fortunately, this is as easy as adding a
-shell alias for your build task:
-```bash
-alias beta="touch Rakefile; bundle exec rake archive API_ENV=production"
-```
-
-I have a slew of similar aliases (terser and refactored, of course) that
-capture all required permutations of build type and API environment.
+Git won't care, but you might: use of this gem may increase your project's
+average build time. The tradeoff for cleaner configuration has been more than
+worthwhile for me, but YMMV.
 
 
 ## Tests
