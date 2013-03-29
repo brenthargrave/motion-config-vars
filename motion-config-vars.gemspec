@@ -6,8 +6,8 @@ Gem::Specification.new do |spec|
   spec.version       = MotionConfigVars::VERSION
   spec.authors       = ["Brent Hargrave"]
   spec.email         = ["brent@brent.is"]
-  spec.description   = %q{Heroku-style config vars for RubyMotion}
-  spec.summary       = %q{Heroku-style config vars for RubyMotion}
+  spec.description   = %q{Heroku-style environment configuration for RubyMotion}
+  spec.summary       = %q{Heroku-style environment configuration for RubyMotion}
   spec.homepage      = "https://github.com/jamescallmebrent/motion-config-vars"
   spec.license       = "MIT"
 
