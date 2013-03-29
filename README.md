@@ -1,12 +1,8 @@
 # motion-config-vars
-## Configure RubyMotion's ENV with a YAML file
 
-This gem brings Rails-on-Heroku-style environment configuration to Rubymotion
-development. Fill out a YAML configuration file with top-level keys containing
-mutually-exclusive environments, and nest keys below them with values
-specific to each environment configuration.
+This gem brings Heroku-style environment configuration to RubyMotion.
 
-For example, setting up an env.yml like so...
+For example, setting up an app.yml like so...
 ```yaml
 API_ENV:
   development:
@@ -17,7 +13,7 @@ API_ENV:
     HOST: "domain.com"
 ```
 
-...and then passing a value for your top-level key, like so:
+...and then passing rake a value for your top-level key, like so:
 ```bash
 rake archive API_ENV=development
 ```
@@ -32,7 +28,7 @@ If touching ENV makes you queasy, not to worry. Pre-existing values aren't
 overwritten and an alternative hash-like constant, RMENV, is configured as well.
 
 You might ask why not make "development", "production", etc. the top-level
-keys? Why bother requiring an API_ENV? In my experience configuring environements
+keys? Why bother requiring an API_ENV? In my experience configuring environments
 for API-backed clients is more complex because their configs depend on both the
 build style (for example, "development", "adhoc" or "release") *and* the API
 they are backed by ("development", "staging", "production"). Using these
@@ -82,10 +78,10 @@ been modified since the last build.  While using this gem, however, your app's
 configuration is *dynamically* updated (specifically, the "app.info_plist"
 configuration variable is edited), which RM won't pick up by default. So, to
 ensure RM rebuilds from the latest, dynamically-defined values in your Rakefile
-it will automatically [touch](http://en.wikipedia.org/wiki/Touch_(Unix)) your
+it will automatically [touch](http://unixhelp.ed.ac.uk/CGI/man-cgi?touch) your
 project's Rakefile before any of RM's default, build-triggering tasks.
 
-Git won't care, but you might: use of this gem may increase your project's
+Git won't notice, but you might: use of this gem may increase your project's
 average build time. The tradeoff for cleaner configuration has been more than
 worthwhile for me, but YMMV.
 
@@ -94,7 +90,7 @@ worthwhile for me, but YMMV.
 
 To run the tests, run
 ```bash
-touch Rakefile; bundle exec rake spec BUILD_ENV=test
+rake spec BUILD_ENV=test
 ```
 (The gem only embeds its code in the app if a config file is present, so it's
 necessary to include a test app.yml to ensure the specs have code to exercise.)
