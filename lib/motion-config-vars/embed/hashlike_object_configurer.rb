@@ -28,7 +28,7 @@ module MotionConfigVars
   protected
 
     def set key, value
-      @hashlike_object[key] ||= value
+      @hashlike_object[key] = value
     end
 
     def validate_config_name_for_facet_named_is_closure
