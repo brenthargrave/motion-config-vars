@@ -2,6 +2,14 @@ unless defined?(Motion::Project::Config)
   raise "This file must be required within a RubyMotion project Rakefile."
 end
 
+require 'motion-yaml'
+require 'motion-require'
+Motion::Require.all(Dir.glob(File.expand_path('../motion-config-vars/embed/**/*.rb', __FILE__)))
+
+%w{ configuration_error hashlike_object_configurer }.each do |filename|
+  require File.join(File.dirname(__FILE__), "motion-config-vars/embed/#{filename}")
+end
+
 vars_yml_filename = "app.yml"
 vars_yml_path = "resources/#{vars_yml_filename}"
 
@@ -29,48 +37,26 @@ namespace "config:vars" do
 end
 
 
-require 'rake/hooks'
 
-before *%w{ spec
-            config
-            default
-            build build:device build:simulator
-            archive archive:distribution } do
 
-  unless File.exists? vars_yml_path
-    puts "WARNING: '#{vars_yml_path}' missing. Run 'rake config:vars:init' to generate one."
-  else
 
-    # NOTE: RM appears to monitor a project Rakefile's modified-at timestamp,
-    # so we force-update it before every build to ensure the build reflects
-    # the latest passed-in environment variable(s).
-    `touch Rakefile`
+unless File.exists? vars_yml_path
+  puts "WARNING: '#{vars_yml_path}' missing. Run 'rake config:vars:init' to generate one."
+else
 
-    require 'yaml' # TODO: how to exclude from build?
-    require 'motion-yaml'
+  Motion::Project::App.setup do |app|
+    vars_yaml = File.read vars_yml_path
+    vars_data = YAML.load vars_yaml
 
-    Motion::Project::App.setup do |app|
-      vars_yaml = File.read vars_yml_path
-      vars_data = YAML.load vars_yaml
 
-      %w{ configuration_error hashlike_object_configurer }.each do |filename|
-        require File.join(File.dirname(__FILE__), "motion-config-vars/embed/#{filename}")
-      end
-      MotionConfigVars::HashlikeObjectConfigurer.new({
-        config_vars_data: vars_data,
-        hashlike_object: app.info_plist,
-        config_name_for_facet_named: lambda { |facet_name| ENV[facet_name] }
-      }).perform!
-
-      # once app.info_plist successfully configured, insert code necessary to
-      # configure app's ENV as well.
-      Dir.glob(File.join(File.dirname(__FILE__), 'motion-config-vars/embed/*.rb')).each do |file|
-        app.files.unshift file
-      end
-
-    end
-
-  end
+    MotionConfigVars::HashlikeObjectConfigurer.new({
+      config_vars_data: vars_data,
+      hashlike_object: app.info_plist,
+      config_name_for_facet_named: lambda { |facet_name| ENV[facet_name] }
+    }).perform!
+  end    
 
 end
+
+
 

@@ -1,3 +1,4 @@
+motion_require 'hashlike_object_configurer'
 if path = NSBundle.mainBundle.pathForResource("app", ofType:"yml")
 
   vars_data = YAML.load File.read path
@@ -16,4 +17,3 @@ if path = NSBundle.mainBundle.pathForResource("app", ofType:"yml")
 else
   puts "WARNING! main bundle missing app.yml"
 end
-
