@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency('motion-yaml', '>= 1.0')
   spec.add_dependency('rake-hooks', '~> 1.2.3')
+  spec.add_runtime_dependency("motion-require", ">= 0.0.6")
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
 end
